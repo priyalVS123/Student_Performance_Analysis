@@ -1,0 +1,677 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>What-If Academic Simulator</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #24104f, #4c1d95);
+            color: white;
+            padding: 28px 50px;
+        }
+
+        .header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.85;
+            font-size: 15px;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 35px auto;
+            padding: 0 25px;
+        }
+
+        .intro,
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .intro h2,
+        .card h2 {
+            color: #35126f;
+            margin-bottom: 12px;
+        }
+
+        .intro p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .student-form {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .field {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d8dee9;
+            border-radius: 9px;
+            font-size: 15px;
+            background: white;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #6d28d9;
+            box-shadow: 0 0 0 3px rgba(109,40,217,0.10);
+        }
+
+        .btn {
+            border: none;
+            padding: 13px 25px;
+            border-radius: 9px;
+            background: #6d28d9;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #581c87;
+        }
+
+        .student-info {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-box {
+            background: #f8f7ff;
+            padding: 18px;
+            border-radius: 12px;
+            border-left: 4px solid #6d28d9;
+        }
+
+        .info-box span {
+            display: block;
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .info-box strong {
+            font-size: 20px;
+            color: #24104f;
+        }
+
+        .intervention-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .intervention {
+            background: #faf9ff;
+            border: 1px solid #e3dcf7;
+            padding: 20px;
+            border-radius: 14px;
+        }
+
+        .intervention h3 {
+            color: #4c1d95;
+            margin-bottom: 6px;
+        }
+
+        .intervention p {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .simulate {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .simulate .btn {
+            padding: 15px 40px;
+            font-size: 16px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .result-box {
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .current {
+            background: #eef2ff;
+        }
+
+        .whatif {
+            background: #f3e8ff;
+        }
+
+        .change {
+            background: #ecfdf5;
+        }
+
+        .result-box span {
+            display: block;
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .result-box strong {
+            font-size: 34px;
+            color: #24104f;
+        }
+
+        .change strong {
+            color: #047857;
+        }
+
+        .negative strong {
+            color: #dc2626;
+        }
+
+        .note {
+            margin-top: 20px;
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            padding: 15px;
+            border-radius: 8px;
+            color: #7c2d12;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .error {
+            background: #fef2f2;
+            border-left: 4px solid #dc2626;
+            padding: 15px;
+            border-radius: 8px;
+            color: #991b1b;
+            margin-top: 20px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #6d28d9;
+            font-weight: bold;
+        }
+
+        @media (max-width: 800px) {
+
+            .student-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .student-info,
+            .intervention-grid,
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 25px;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+    <h1>What-If Academic Simulator</h1>
+
+    <p>
+        Explore how academic interventions may affect
+        a student's predicted performance.
+    </p>
+
+</div>
+
+
+<div class="container">
+
+
+<div class="intro">
+
+    <h2>Academic Intervention Simulator</h2>
+
+    <p>
+        Select a student and test hypothetical changes in
+        study time, previous failures, and absences.
+        The system compares the student's current prediction
+        with the simulated prediction.
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     STUDENT SELECTION
+===================================================== -->
+
+<div class="card">
+
+    <h2>1. Select Student</h2>
+
+    <form method="POST"
+          action="/whatif"
+          class="student-form">
+
+        <div class="field">
+
+            <label for="student_id">
+                Student ID
+            </label>
+
+            <select
+                id="student_id"
+                name="student_id"
+                required>
+
+                <option value="">
+                    -- Select Student ID --
+                </option>
+
+                {% for i in range(1, 396) %}
+
+                    <option
+                        value="STU{{ "%03d"|format(i) }}"
+                        {% if student_id == "STU" + "%03d"|format(i) %}
+                            selected
+                        {% endif %}
+                    >
+                        STU{{ "%03d"|format(i) }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <button
+            type="submit"
+            class="btn">
+            Load Student
+        </button>
+
+    </form>
+
+
+    {% if error %}
+
+    <div class="error">
+        {{ error }}
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+{% if selected_student is not none %}
+
+
+<!-- =====================================================
+     CURRENT PROFILE
+===================================================== -->
+
+<div class="card">
+
+    <h2>2. Current Student Profile</h2>
+
+    <div class="student-info">
+
+        <div class="info-box">
+
+            <span>Student ID</span>
+
+            <strong>
+                {{ selected_student["Student_ID"] }}
+            </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <span>Actual Final Grade</span>
+
+            <strong>
+                {{ selected_student["G3"] }}
+            </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <span>Current Study Time</span>
+
+            <strong>
+                {{ selected_student["studytime"] }}
+            </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <span>Current Absences</span>
+
+            <strong>
+                {{ selected_student["absences"] }}
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     INTERVENTION
+===================================================== -->
+
+<div class="card">
+
+    <h2>3. Try an Academic Intervention</h2>
+
+    <form method="POST"
+          action="/whatif">
+
+        <input
+            type="hidden"
+            name="student_id"
+            value="{{ selected_student['Student_ID'] }}"
+        >
+
+
+        <div class="intervention-grid">
+
+
+            <!-- STUDY TIME -->
+
+            <div class="intervention">
+
+                <h3>Study Time</h3>
+
+                <p>
+                    Change the student's weekly study-time
+                    category.
+                </p>
+
+                <select name="studytime">
+
+                    <option value="1"
+                        {% if selected_student["studytime"] == 1 %}selected{% endif %}>
+                        1 — Very Low
+                    </option>
+
+                    <option value="2"
+                        {% if selected_student["studytime"] == 2 %}selected{% endif %}>
+                        2 — Low
+                    </option>
+
+                    <option value="3"
+                        {% if selected_student["studytime"] == 3 %}selected{% endif %}>
+                        3 — High
+                    </option>
+
+                    <option value="4"
+                        {% if selected_student["studytime"] == 4 %}selected{% endif %}>
+                        4 — Very High
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- FAILURES -->
+
+            <div class="intervention">
+
+                <h3>Previous Failures</h3>
+
+                <p>
+                    Simulate a different previous-failure
+                    count.
+                </p>
+
+                <select name="failures">
+
+                    <option value="0"
+                        {% if selected_student["failures"] == 0 %}selected{% endif %}>
+                        0 — No Failures
+                    </option>
+
+                    <option value="1"
+                        {% if selected_student["failures"] == 1 %}selected{% endif %}>
+                        1 Failure
+                    </option>
+
+                    <option value="2"
+                        {% if selected_student["failures"] == 2 %}selected{% endif %}>
+                        2 Failures
+                    </option>
+
+                    <option value="3"
+                        {% if selected_student["failures"] == 3 %}selected{% endif %}>
+                        3 Failures
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- ABSENCES -->
+
+            <div class="intervention">
+
+                <h3>Absences</h3>
+
+                <p>
+                    Test how a different number of absences
+                    changes the prediction.
+                </p>
+
+                <input
+                    type="number"
+                    name="absences"
+                    min="0"
+                    max="75"
+                    value="{{ selected_student['absences'] }}"
+                    required
+                >
+
+            </div>
+
+
+        </div>
+
+
+        <div class="simulate">
+
+            <button
+                type="submit"
+                class="btn">
+                🔄 Run What-If Simulation
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+{% endif %}
+
+
+{% if whatif_prediction is not none %}
+
+
+<!-- =====================================================
+     RESULTS
+===================================================== -->
+
+<div class="card">
+
+    <h2>Simulation Result</h2>
+
+    <div class="result-grid">
+
+
+        <div class="result-box current">
+
+            <span>
+                Current Predicted Grade
+            </span>
+
+            <strong>
+                {{ current_prediction }}
+            </strong>
+
+        </div>
+
+
+        <div class="result-box whatif">
+
+            <span>
+                What-If Predicted Grade
+            </span>
+
+            <strong>
+                {{ whatif_prediction }}
+            </strong>
+
+        </div>
+
+
+        <div class="result-box change
+            {% if prediction_change < 0 %}
+                negative
+            {% endif %}
+        ">
+
+            <span>
+                Change in Prediction
+            </span>
+
+            <strong>
+
+                {% if prediction_change > 0 %}
+                    +{{ prediction_change }}
+
+                {% elif prediction_change < 0 %}
+                    {{ prediction_change }}
+
+                {% else %}
+                    0.00
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        This is a model-based hypothetical simulation.
+        It does not guarantee that changing these factors
+        will actually produce the predicted grade.
+
+    </div>
+
+</div>
+
+
+{% endif %}
+
+
+<a href="/dashboard"
+   class="back">
+    ← Back to Dashboard
+</a>
+
+
+</div>
+
+</body>
+
+</html>
+

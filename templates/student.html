@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Analysis | StudentIQ</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f5f3ff,
+                    #eef2ff
+                );
+
+            color: #1e1b4b;
+        }
+
+        .student-page {
+            width: 90%;
+            max-width: 1050px;
+            margin: 45px auto;
+        }
+
+        /* ================= HEADER ================= */
+
+        .student-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .student-header h1 {
+            margin: 0 0 10px;
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .student-header p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        /* ================= SEARCH CARD ================= */
+
+        .search-card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+
+            box-shadow:
+                0 10px 35px rgba(30, 27, 75, 0.08);
+
+            margin-bottom: 28px;
+        }
+
+        .search-card h2 {
+            margin: 0 0 8px;
+            font-size: 21px;
+        }
+
+        .search-card p {
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        /* ================= SEARCH FORM ================= */
+
+        .search-form {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .search-form input {
+            flex: 1;
+            width: auto;
+            min-width: 0;
+
+            height: 48px;
+
+            padding: 0 16px;
+
+            border: 1px solid #d6d9e5;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            color: #1f2937;
+
+            background: white;
+
+            outline: none;
+        }
+
+        .search-form input:focus {
+            border-color: #6366f1;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(99, 102, 241, 0.12);
+        }
+
+        .search-form input::placeholder {
+            color: #9ca3af;
+        }
+
+        .search-button {
+            flex-shrink: 0;
+
+            height: 48px;
+
+            padding: 0 25px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #7c3aed
+                );
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            white-space: nowrap;
+        }
+
+        .search-button:hover {
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 6px 15px
+                rgba(99, 102, 241, 0.25);
+        }
+
+        /* ================= ERROR ================= */
+
+        .error-box {
+            margin-top: 18px;
+
+            padding: 14px 18px;
+
+            border-radius: 10px;
+
+            background: #fff1f2;
+
+            border: 1px solid #fecdd3;
+
+            color: #be123c;
+
+            font-size: 14px;
+        }
+
+        /* ================= RESULT ================= */
+
+        .student-result {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 22px;
+        }
+
+        .profile-card,
+        .grade-card {
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 28px;
+
+            box-shadow:
+                0 10px 35px
+                rgba(30, 27, 75, 0.08);
+        }
+
+        .profile-card h2,
+        .grade-card h2 {
+            margin-top: 0;
+
+            margin-bottom: 18px;
+
+            font-size: 21px;
+        }
+
+        /* ================= STUDENT ID ================= */
+
+        .student-id {
+            display: inline-block;
+
+            background: #eef2ff;
+
+            color: #4f46e5;
+
+            padding: 7px 13px;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            margin-bottom: 20px;
+        }
+
+        /* ================= INFO GRID ================= */
+
+        .info-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 14px;
+        }
+
+        .info-box {
+            background: #f8f9fd;
+
+            padding: 15px;
+
+            border-radius: 11px;
+        }
+
+        .info-box span {
+            display: block;
+
+            color: #8a8fa3;
+
+            font-size: 12px;
+
+            margin-bottom: 6px;
+        }
+
+        .info-box strong {
+            color: #25213f;
+
+            font-size: 16px;
+        }
+
+        /* ================= GRADE ================= */
+
+        .grade-card p {
+            color: #6b7280;
+
+            margin-bottom: 5px;
+        }
+
+        .grade-number {
+            font-size: 58px;
+
+            font-weight: 800;
+
+            color: #4f46e5;
+
+            margin: 10px 0 15px;
+        }
+
+        .grade-number span {
+            font-size: 20px;
+
+            color: #8a8fa3;
+
+            font-weight: 500;
+        }
+
+        /* ================= PERFORMANCE ================= */
+
+        .performance {
+            display: inline-block;
+
+            padding: 9px 15px;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+        .performance.high {
+            background: #dcfce7;
+
+            color: #15803d;
+        }
+
+        .performance.medium {
+            background: #fef3c7;
+
+            color: #a16207;
+        }
+
+        .performance.low {
+            background: #fee2e2;
+
+            color: #b91c1c;
+        }
+
+        /* ================= ANALYSIS ================= */
+
+        .analysis-note {
+            margin-top: 22px;
+
+            padding: 17px;
+
+            background: #f8f7ff;
+
+            border-left:
+                4px solid #6366f1;
+
+            border-radius: 8px;
+
+            color: #5b6075;
+
+            line-height: 1.6;
+
+            font-size: 14px;
+        }
+
+        /* ================= BACK BUTTON ================= */
+
+        .back-dashboard {
+            display: block;
+
+            width: fit-content;
+
+            margin: 28px auto 0;
+
+            color: #4f46e5;
+
+            text-decoration: none;
+
+            font-weight: 600;
+        }
+
+        .back-dashboard:hover {
+            text-decoration: underline;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 750px) {
+
+            .student-result {
+                grid-template-columns: 1fr;
+            }
+
+            .search-form {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            .search-form input {
+                width: 100%;
+            }
+
+            .search-button {
+                width: 100%;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="student-page">
+
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="student-header">
+
+        <h1>
+            Student Performance Analysis
+        </h1>
+
+        <p>
+            Search a student to view their individual academic performance.
+        </p>
+
+    </div>
+
+
+    <!-- ================= SEARCH ================= -->
+
+    <div class="search-card">
+
+        <h2>
+            🔎 Find Student
+        </h2>
+
+        <p>
+            Enter a Student ID between
+            <strong>STU001</strong>
+            and
+            <strong>STU395</strong>.
+        </p>
+
+
+        <form
+            action="/student"
+            method="GET"
+            class="search-form"
+        >
+
+            <input
+                type="text"
+                name="student_id"
+                placeholder="Enter Student ID e.g. STU001"
+                value="{{ request.args.get('student_id', '') }}"
+                autocomplete="off"
+                required
+            >
+
+            <button
+                type="submit"
+                class="search-button"
+            >
+                Analyze Student
+            </button>
+
+        </form>
+
+
+        {% if error %}
+
+        <div class="error-box">
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ================= STUDENT RESULT ================= -->
+
+    {% if student is not none %}
+
+    <div class="student-result">
+
+
+        <!-- ================= PROFILE ================= -->
+
+        <div class="profile-card">
+
+            <h2>
+                Student Profile
+            </h2>
+
+
+            <div class="student-id">
+
+                {{ student["Student_ID"] }}
+
+            </div>
+
+
+            <div class="info-grid">
+
+
+                <div class="info-box">
+
+                    <span>
+                        School
+                    </span>
+
+                    <strong>
+                        {{ student["school"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span>
+                        Gender
+                    </span>
+
+                    <strong>
+
+                        {% if student["sex"] == "F" %}
+                            Female
+                        {% else %}
+                            Male
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span>
+                        Age
+                    </span>
+
+                    <strong>
+                        {{ student["age"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span>
+                        Study Time
+                    </span>
+
+                    <strong>
+                        Level {{ student["studytime"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span>
+                        Previous Failures
+                    </span>
+
+                    <strong>
+                        {{ student["failures"] }}
+                    </strong>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span>
+                        Absences
+                    </span>
+
+                    <strong>
+                        {{ student["absences"] }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= PERFORMANCE ================= -->
+
+        <div class="grade-card">
+
+            <h2>
+                Academic Performance
+            </h2>
+
+
+            <p>
+                Final Grade (G3)
+            </p>
+
+
+            <div class="grade-number">
+
+                {{ student["G3"] }}
+
+                <span>
+                    / 20
+                </span>
+
+            </div>
+
+
+            <div class="performance {{ performance_class }}">
+
+                {{ performance }}
+
+            </div>
+
+
+            <div class="analysis-note">
+
+                <strong>
+                    Analysis:
+                </strong>
+
+                This student's final grade is based on the
+                academic performance recorded in the dataset.
+                Previous failures and absences are important
+                factors considered in the overall analysis.
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    {% endif %}
+
+
+    <a
+        href="/dashboard"
+        class="back-dashboard"
+    >
+        ← Back to Dashboard
+    </a>
+
+
+</div>
+
+</body>
+
+</html>

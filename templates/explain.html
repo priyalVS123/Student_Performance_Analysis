@@ -1,0 +1,462 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Explain Prediction | StudentIQ</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f5f3ff,
+                    #eef2ff
+                );
+
+            color: #1e1b4b;
+        }
+
+        .page {
+            width: 90%;
+            max-width: 1150px;
+
+            margin: 40px auto;
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0 0 10px;
+
+            font-size: 34px;
+
+            font-weight: 800;
+        }
+
+        .header p {
+            margin: 0;
+
+            color: #6b7280;
+
+            font-size: 15px;
+        }
+
+        /* ================= INTRO ================= */
+
+        .intro-card {
+
+            background: white;
+
+            padding: 25px 30px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 10px 35px
+                rgba(30, 27, 75, 0.08);
+
+            margin-bottom: 25px;
+        }
+
+        .intro-card h2 {
+            margin-top: 0;
+
+            font-size: 21px;
+        }
+
+        .intro-card p {
+
+            color: #606579;
+
+            line-height: 1.7;
+
+            margin-bottom: 0;
+        }
+
+        /* ================= IMAGE ================= */
+
+        .chart-card {
+
+            background: white;
+
+            padding: 28px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 10px 35px
+                rgba(30, 27, 75, 0.08);
+
+            margin-bottom: 25px;
+
+            text-align: center;
+        }
+
+        .chart-card h2 {
+
+            margin-top: 0;
+
+            margin-bottom: 8px;
+
+            font-size: 21px;
+        }
+
+        .chart-card p {
+
+            color: #6b7280;
+
+            font-size: 14px;
+
+            margin-bottom: 25px;
+        }
+
+        .shap-image {
+
+            width: 100%;
+
+            max-width: 950px;
+
+            display: block;
+
+            margin: auto;
+
+            border-radius: 12px;
+
+            border: 1px solid #e5e7eb;
+
+        }
+
+        /* ================= FACTORS ================= */
+
+        .factor-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .factor-card {
+
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(30, 27, 75, 0.06);
+
+            border-top:
+                4px solid #6366f1;
+        }
+
+        .factor-card h3 {
+
+            margin: 0 0 10px;
+
+            font-size: 16px;
+        }
+
+        .factor-card p {
+
+            margin: 0;
+
+            color: #6b7280;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        /* ================= NOTE ================= */
+
+        .note {
+
+            background: #f8f7ff;
+
+            border-left:
+                4px solid #6366f1;
+
+            padding: 18px;
+
+            border-radius: 10px;
+
+            color: #5b6075;
+
+            line-height: 1.7;
+
+            font-size: 14px;
+
+            margin-bottom: 25px;
+        }
+
+        /* ================= BACK ================= */
+
+        .back {
+
+            display: block;
+
+            width: fit-content;
+
+            margin: 0 auto;
+
+            color: #4f46e5;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+        }
+
+        .back:hover {
+
+            text-decoration: underline;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 800px) {
+
+            .factor-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+
+                font-size: 28px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="header">
+
+        <h1>
+            Explain Prediction
+        </h1>
+
+        <p>
+            Understanding which factors influence student performance predictions
+        </p>
+
+    </div>
+
+
+    <!-- ================= INTRO ================= -->
+
+    <div class="intro-card">
+
+        <h2>
+            🔍 Explainable AI using SHAP
+        </h2>
+
+        <p>
+
+            The StudentIQ model uses a Random Forest regression model
+            to estimate a student's final grade. SHAP
+            (SHapley Additive exPlanations) helps explain which
+            features contribute most strongly to the model's predictions.
+
+        </p>
+
+    </div>
+
+
+    <!-- ================= SHAP CHART ================= -->
+
+    <div class="chart-card">
+
+        <h2>
+            Feature Importance
+        </h2>
+
+        <p>
+            Features with larger SHAP values have a stronger influence
+            on the model's predictions.
+        </p>
+
+
+        <img
+            src="{{ url_for('static', filename='shap_summary.png') }}"
+            alt="SHAP Feature Importance"
+            class="shap-image"
+        >
+
+    </div>
+
+
+    <!-- ================= IMPORTANT FACTORS ================= -->
+
+    <div class="factor-grid">
+
+
+        <div class="factor-card">
+
+            <h3>
+                📚 Previous Failures
+            </h3>
+
+            <p>
+
+                Previous academic failures are one of the strongest
+                factors influencing the model's prediction of final
+                performance.
+
+            </p>
+
+        </div>
+
+
+        <div class="factor-card">
+
+            <h3>
+                📅 Absences
+            </h3>
+
+            <p>
+
+                Absence levels have a strong influence on the model's
+                predicted academic performance.
+
+            </p>
+
+        </div>
+
+
+        <div class="factor-card">
+
+            <h3>
+                ⏱ Study Time
+            </h3>
+
+            <p>
+
+                Weekly study time contributes to the model's understanding
+                of a student's academic performance.
+
+            </p>
+
+        </div>
+
+
+        <div class="factor-card">
+
+            <h3>
+                ❤️ Health
+            </h3>
+
+            <p>
+
+                Reported health status is another factor considered
+                by the predictive model.
+
+            </p>
+
+        </div>
+
+
+        <div class="factor-card">
+
+            <h3>
+                👥 Social Activity
+            </h3>
+
+            <p>
+
+                Variables such as going out and social activity can
+                contribute to the model's prediction.
+
+            </p>
+
+        </div>
+
+
+        <div class="factor-card">
+
+            <h3>
+                🎓 Education Factors
+            </h3>
+
+            <p>
+
+                Parental education and educational support variables
+                also contribute to the model's predictions.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= IMPORTANT NOTE ================= -->
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        SHAP explains how features influence the machine-learning
+        model's predictions. It does not prove that a feature
+        directly causes a student's academic outcome.
+
+    </div>
+
+
+    <!-- ================= BACK ================= -->
+
+    <a
+        href="/dashboard"
+        class="back"
+    >
+        ← Back to Dashboard
+    </a>
+
+
+</div>
+
+
+</body>
+
+</html>
+```

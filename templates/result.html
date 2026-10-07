@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prediction Result</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container result-container">
+
+    <h1>Student Performance Prediction</h1>
+
+    <p class="subtitle">
+        Model-generated estimate based on the information provided.
+    </p>
+
+    <div class="result-card">
+
+        <h2>Predicted Final Grade</h2>
+
+        <div class="prediction">
+            {{ prediction }}
+            <span>/ 20</span>
+        </div>
+
+        {% if prediction >= 14 %}
+            <div class="performance high">
+                High Performance
+            </div>
+
+            <p>
+                The model estimates a relatively strong final academic performance.
+            </p>
+
+        {% elif prediction >= 10 %}
+            <div class="performance medium">
+                Moderate Performance
+            </div>
+
+            <p>
+                The model estimates moderate academic performance.
+                There may be opportunities for improvement.
+            </p>
+
+        {% else %}
+            <div class="performance low">
+                Needs Attention
+            </div>
+
+            <p>
+                The model estimates lower academic performance.
+                Additional academic support may be beneficial.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+    <div class="info-box">
+
+        <h2>About This Prediction</h2>
+
+        <p>
+            This prediction is generated using a Random Forest regression
+            model trained on student academic, demographic, social and
+            educational information.
+        </p>
+
+        <p>
+            The model does not use G1 or G2 because those variables contain
+            information about earlier grades and could cause target leakage.
+        </p>
+
+    </div>
+
+    <a href="/" class="back-button">
+        Predict Another Student
+    </a>
+
+</div>
+
+</body>
+</html>

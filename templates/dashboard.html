@@ -1,0 +1,2787 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>StudentIQ | Student Performance Analytics</title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='dashboard.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                <span>SI</span>
+            </div>
+
+            <div>
+                <h2>StudentIQ</h2>
+                <p>Academic Intelligence</p>
+            </div>
+
+        </div>
+
+        <nav class="navigation">
+
+            <button class="nav-item active"
+                    data-page="dashboard"
+                    onclick="showPage('dashboard')">
+
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+
+            </button>
+
+            <button class="nav-item"
+                    data-page="student"
+                    onclick="showPage('student')">
+
+                <span class="nav-icon">◉</span>
+                <span>Student Analysis</span>
+
+            </button>
+
+            <button class="nav-item"
+                    data-page="predict"
+                    onclick="showPage('predict')">
+
+                <span class="nav-icon">✦</span>
+                <span>Predict Performance</span>
+
+            </button>
+
+            <button class="nav-item"
+                    data-page="explain"
+                    onclick="showPage('explain')">
+
+                <span class="nav-icon">⌁</span>
+                <span>Explain Prediction</span>
+
+            </button>
+
+            <button class="nav-item"
+                    data-page="whatif"
+                    onclick="showPage('whatif')">
+
+                <span class="nav-icon">↗</span>
+                <span>What-If Simulator</span>
+
+            </button>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="model-status">
+
+                <span class="status-dot"></span>
+
+                <div>
+                    <strong>ML Model Online</strong>
+                    <small>Random Forest • 30 Features</small>
+                </div>
+
+            </div>
+
+            <div class="sidebar-footer">
+                Student Performance Analysis
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- =================================================
+             DASHBOARD
+        ================================================== -->
+
+        <section id="page-dashboard"
+                 class="page-section active">
+
+            <div class="topbar">
+
+                <div>
+                    <span class="eyebrow">
+                        ACADEMIC ANALYTICS
+                    </span>
+
+                    <h1>Student Performance Dashboard</h1>
+
+                    <p>
+                        Explore academic patterns, risk indicators
+                        and performance trends across students.
+                    </p>
+                </div>
+
+                <div class="topbar-badge">
+                    <span class="status-dot"></span>
+                    Live Dataset
+                </div>
+
+            </div>
+
+
+            <!-- HERO -->
+
+            <div class="hero-card">
+
+                <div class="hero-content">
+
+                    <div class="hero-badge">
+                        STUDENT PERFORMANCE INTELLIGENCE
+                    </div>
+
+                    <h2>
+                        Understand performance.<br>
+                        Identify academic risk.
+                    </h2>
+
+                    <p>
+                        Analyze student outcomes using academic,
+                        demographic and behavioral indicators.
+                    </p>
+
+                    <button class="hero-button"
+                            onclick="showPage('predict')">
+
+                        Predict Student Performance
+                        <span>→</span>
+
+                    </button>
+
+                </div>
+
+                <div class="hero-decoration">
+
+                    <div class="floating-card card-one">
+                        <strong>30</strong>
+                        <span>ML Features</span>
+                    </div>
+
+                    <div class="floating-card card-two">
+                        <strong>395</strong>
+                        <span>Students</span>
+                    </div>
+
+                    <div class="orb"></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FILTERS -->
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">
+                        ANALYSIS CONTROLS
+                    </span>
+
+                    <h2>Filter Student Data</h2>
+                </div>
+
+                <button class="reset-button"
+                        onclick="resetFilters()">
+
+                    ↻ Reset Filters
+
+                </button>
+
+            </div>
+
+
+            <div class="filter-panel">
+
+                <div class="filter-item">
+
+                    <label>School</label>
+
+                    <select id="schoolFilter"
+                            onchange="applyFilters()">
+
+                        <option value="All">
+                            All Schools
+                        </option>
+
+                        <option value="GP">
+                            Gabriel Pereira (GP)
+                        </option>
+
+                        <option value="MS">
+                            Mousinho da Silveira (MS)
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-item">
+
+                    <label>Gender</label>
+
+                    <select id="genderFilter"
+                            onchange="applyFilters()">
+
+                        <option value="All">
+                            All Genders
+                        </option>
+
+                        <option value="F">
+                            Female
+                        </option>
+
+                        <option value="M">
+                            Male
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-item">
+
+                    <label>Study Time</label>
+
+                    <select id="studyFilter"
+                            onchange="applyFilters()">
+
+                        <option value="All">
+                            All Study Time
+                        </option>
+
+                        <option value="1">
+                            &lt; 2 hours
+                        </option>
+
+                        <option value="2">
+                            2–5 hours
+                        </option>
+
+                        <option value="3">
+                            5–10 hours
+                        </option>
+
+                        <option value="4">
+                            &gt; 10 hours
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-item">
+
+                    <label>Performance Level</label>
+
+                    <select id="performanceFilter"
+                            onchange="applyFilters()">
+
+                        <option value="All">
+                            All Performance
+                        </option>
+
+                        <option value="High Risk">
+                            High Risk
+                        </option>
+
+                        <option value="Moderate Risk">
+                            Moderate Risk
+                        </option>
+
+                        <option value="Average">
+                            Average
+                        </option>
+
+                        <option value="Good">
+                            Good
+                        </option>
+
+                        <option value="Excellent">
+                            Excellent
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- KPI CARDS -->
+
+            <div class="kpi-grid">
+
+                <div class="kpi-card purple">
+
+                    <div class="kpi-icon">◉</div>
+
+                    <div>
+                        <span>Total Students</span>
+                        <strong id="kpiStudents">395</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="kpi-card blue">
+
+                    <div class="kpi-icon">◆</div>
+
+                    <div>
+                        <span>Average Final Grade</span>
+                        <strong id="kpiAverage">10.42</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="kpi-card teal">
+
+                    <div class="kpi-icon">★</div>
+
+                    <div>
+                        <span>High Performers</span>
+                        <strong id="kpiHigh">52</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="kpi-card rose">
+
+                    <div class="kpi-icon">!</div>
+
+                    <div>
+                        <span>Students At Risk</span>
+                        <strong id="kpiRisk">102</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CHARTS -->
+
+            <div class="section-heading chart-heading">
+
+                <div>
+                    <span class="section-label">
+                        PERFORMANCE INSIGHTS
+                    </span>
+
+                    <h2>Academic Analysis</h2>
+                </div>
+
+                <span class="chart-note">
+                    Interactive visual analysis
+                </span>
+
+            </div>
+
+
+            <div class="chart-grid">
+
+                <!-- Grade distribution -->
+
+                <div class="chart-card large">
+
+                    <div class="chart-header">
+
+                        <div>
+                            <h3>Final Grade Distribution</h3>
+
+                            <p>
+                                Distribution of final grades
+                                across students
+                            </p>
+                        </div>
+
+                        <span class="chart-tag purple-tag">
+                            G3
+                        </span>
+
+                    </div>
+
+                    <div class="chart-wrapper">
+                        <canvas id="gradeChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- Performance category -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+                            <h3>Performance Profile</h3>
+
+                            <p>
+                                Students grouped by performance level
+                            </p>
+                        </div>
+
+                        <span class="chart-tag blue-tag">
+                            PROFILE
+                        </span>
+
+                    </div>
+
+                    <div class="chart-wrapper doughnut-wrapper">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- Study time -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+                            <h3>Study Time vs Grade</h3>
+
+                            <p>
+                                Average G3 by weekly study time
+                            </p>
+                        </div>
+
+                        <span class="chart-tag teal-tag">
+                            STUDY
+                        </span>
+
+                    </div>
+
+                    <div class="chart-wrapper">
+                        <canvas id="studyChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- Failures -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+                            <h3>Previous Failures</h3>
+
+                            <p>
+                                Academic outcome by prior failures
+                            </p>
+                        </div>
+
+                        <span class="chart-tag orange-tag">
+                            RISK
+                        </span>
+
+                    </div>
+
+                    <div class="chart-wrapper">
+                        <canvas id="failureChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- Absence -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+                            <h3>Absence Analysis</h3>
+
+                            <p>
+                                Average grade across absence groups
+                            </p>
+                        </div>
+
+                        <span class="chart-tag rose-tag">
+                            ATTENDANCE
+                        </span>
+
+                    </div>
+
+                    <div class="chart-wrapper">
+                        <canvas id="absenceChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- Gender -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+                            <h3>Gender Performance</h3>
+
+                            <p>
+                                Average final grade by gender
+                            </p>
+                        </div>
+
+                        <span class="chart-tag indigo-tag">
+                            DEMOGRAPHIC
+                        </span>
+
+                    </div>
+
+                    <div class="chart-wrapper doughnut-wrapper">
+                        <canvas id="genderChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- School -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+                            <h3>School Comparison</h3>
+
+                            <p>
+                                Average grade by school
+                            </p>
+                        </div>
+
+                        <span class="chart-tag violet-tag">
+                            SCHOOL
+                        </span>
+
+                    </div>
+
+                    <div class="chart-wrapper">
+                        <canvas id="schoolChart"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FINDINGS -->
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">
+                        DATA-DRIVEN OBSERVATIONS
+                    </span>
+
+                    <h2>Key Findings</h2>
+                </div>
+
+            </div>
+
+
+            <div class="findings-grid">
+
+                <div class="finding-card">
+
+                    <div class="finding-number">01</div>
+
+                    <div>
+                        <h3>Previous Failures</h3>
+
+                        <p>
+                            Students with more previous failures
+                            tend to have substantially lower final
+                            grades.
+                        </p>
+
+                        <span class="finding-value">
+                            Correlation: −0.36
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="finding-card">
+
+                    <div class="finding-number blue">02</div>
+
+                    <div>
+                        <h3>Study Time</h3>
+
+                        <p>
+                            Higher study-time categories are
+                            generally associated with stronger
+                            average final grades.
+                        </p>
+
+                        <span class="finding-value">
+                            Association observed
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="finding-card">
+
+                    <div class="finding-number teal">03</div>
+
+                    <div>
+                        <h3>Attendance</h3>
+
+                        <p>
+                            Absence patterns are included as an
+                            important behavioral factor in the
+                            predictive analysis.
+                        </p>
+
+                        <span class="finding-value">
+                            SHAP importance: 1.10
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- QUICK ACTIONS -->
+
+            <div class="quick-section">
+
+                <span class="section-label">
+                    EXPLORE STUDENTIQ
+                </span>
+
+                <h2>Continue Your Analysis</h2>
+
+                <div class="quick-actions">
+
+                    <button onclick="showPage('student')">
+                        <span class="quick-icon">◉</span>
+                        <div>
+                            <strong>Student Analysis</strong>
+                            <small>Inspect an individual student</small>
+                        </div>
+                        <span>→</span>
+                    </button>
+
+                    <button onclick="showPage('predict')">
+                        <span class="quick-icon">✦</span>
+                        <div>
+                            <strong>Predict Performance</strong>
+                            <small>Generate an ML prediction</small>
+                        </div>
+                        <span>→</span>
+                    </button>
+
+                    <button onclick="showPage('whatif')">
+                        <span class="quick-icon">↗</span>
+                        <div>
+                            <strong>What-If Simulator</strong>
+                            <small>Test academic interventions</small>
+                        </div>
+                        <span>→</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             STUDENT ANALYSIS
+        ================================================== -->
+
+        <section id="page-student"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <span class="section-label">
+                    INDIVIDUAL ANALYSIS
+                </span>
+
+                <h1>Student Analysis</h1>
+
+                <p>
+                    Search for a student and view their academic
+                    profile, actual performance and model estimate.
+                </p>
+
+            </div>
+
+
+            <div class="student-search-card">
+
+                <div class="search-icon">⌕</div>
+
+                <div class="search-content">
+
+                    <h2>Find a Student</h2>
+
+                    <p>
+                        Enter a Student ID such as
+                        <strong>STU001</strong>.
+                    </p>
+
+                    <div class="search-row">
+
+                        <input type="text"
+                               id="studentSearch"
+                               placeholder="Enter Student ID">
+
+                        <button class="primary-button"
+                                onclick="searchStudent()">
+
+                            Search Student
+                            <span>→</span>
+
+                        </button>
+
+                    </div>
+
+                    <div id="studentMessage"
+                         class="message">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div id="studentResult"
+                 class="student-result hidden">
+
+                <div class="profile-header">
+
+                    <div class="profile-avatar">
+                        ST
+                    </div>
+
+                    <div>
+                        <span class="profile-label">
+                            STUDENT PROFILE
+                        </span>
+
+                        <h2 id="studentName">
+                            STU001
+                        </h2>
+
+                        <p id="studentMeta">
+                            Student information
+                        </p>
+                    </div>
+
+                    <div id="studentCategory"
+                         class="performance-pill">
+                        Average
+                    </div>
+
+                </div>
+
+
+                <div class="profile-grid">
+
+                    <div class="profile-stat">
+                        <span>Age</span>
+                        <strong id="studentAge">--</strong>
+                    </div>
+
+                    <div class="profile-stat">
+                        <span>School</span>
+                        <strong id="studentSchool">--</strong>
+                    </div>
+
+                    <div class="profile-stat">
+                        <span>Study Time</span>
+                        <strong id="studentStudy">--</strong>
+                    </div>
+
+                    <div class="profile-stat">
+                        <span>Previous Failures</span>
+                        <strong id="studentFailures">--</strong>
+                    </div>
+
+                    <div class="profile-stat">
+                        <span>Absences</span>
+                        <strong id="studentAbsences">--</strong>
+                    </div>
+
+                    <div class="profile-stat highlight">
+                        <span>Actual Final Grade</span>
+                        <strong id="studentActual">--</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="comparison-card">
+
+                    <div>
+
+                        <span>Model Estimate</span>
+
+                        <h3>
+                            <span id="studentPrediction">
+                                --
+                            </span>
+                            <small>/ 20</small>
+                        </h3>
+
+                    </div>
+
+                    <div class="prediction-track">
+
+                        <div id="studentTrack"
+                             class="prediction-fill">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PREDICTION
+        ================================================== -->
+
+        <section id="page-predict"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <span class="section-label">
+                    MACHINE LEARNING
+                </span>
+
+                <h1>Predict Student Performance</h1>
+
+                <p>
+                    Use the trained Random Forest model to estimate
+                    a student's final academic grade.
+                </p>
+
+            </div>
+
+
+            <div class="prediction-layout">
+
+                <div class="prediction-form-card">
+
+                    <div class="form-card-title">
+
+                        <div class="large-icon">
+                            ✦
+                        </div>
+
+                        <div>
+                            <h2>Student Prediction</h2>
+
+                            <p>
+                                Select a student from the dataset.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <label>Student ID</label>
+
+                    <input type="text"
+                           id="predictStudentId"
+                           placeholder="e.g. STU001">
+
+
+                    <button class="primary-button full"
+                            onclick="runPrediction()">
+
+                        Predict Final Grade
+                        <span>→</span>
+
+                    </button>
+
+
+                    <div class="model-info">
+
+                        <div>
+                            <strong>30</strong>
+                            <span>Features</span>
+                        </div>
+
+                        <div>
+                            <strong>RF</strong>
+                            <span>Algorithm</span>
+                        </div>
+
+                        <div>
+                            <strong>0.29</strong>
+                            <span>R² Score</span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="leakage-note">
+
+                        <strong>Model integrity</strong>
+
+                        <p>
+                            G1 and G2 are excluded because they
+                            are intermediate grades that can cause
+                            target leakage when predicting G3.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="predictionResult"
+                     class="prediction-result-card">
+
+                    <div class="result-placeholder">
+
+                        <div class="placeholder-icon">
+                            ✦
+                        </div>
+
+                        <h2>Prediction Ready</h2>
+
+                        <p>
+                            Enter a Student ID to generate the
+                            predicted final grade.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             EXPLAIN
+        ================================================== -->
+
+        <section id="page-explain"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <span class="section-label">
+                    EXPLAINABLE AI
+                </span>
+
+                <h1>Explain Prediction</h1>
+
+                <p>
+                    Understand which features influence the
+                    Random Forest model's predictions.
+                </p>
+
+            </div>
+
+
+            <div class="explain-intro">
+
+                <div class="explain-icon">
+                    ⌁
+                </div>
+
+                <div>
+
+                    <h2>SHAP Feature Importance</h2>
+
+                    <p>
+                        SHAP helps explain how individual features
+                        contribute to model predictions. These
+                        contributions describe model behavior and
+                        should not be interpreted as causation.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="shap-card">
+
+                <div class="chart-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            GLOBAL MODEL EXPLANATION
+                        </span>
+
+                        <h2>What Influences Student Predictions?</h2>
+
+                    </div>
+
+                    <span class="chart-tag purple-tag">
+                        SHAP
+                    </span>
+
+                </div>
+
+
+                <div id="shapContainer"
+                     class="shap-container">
+
+                    <div class="shap-loading">
+                        Loading SHAP analysis...
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="shap-insights">
+
+                <div class="shap-insight">
+
+                    <strong>01</strong>
+
+                    <div>
+                        <h3>Absences</h3>
+                        <p>
+                            One of the strongest contributors
+                            to model predictions.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="shap-insight">
+
+                    <strong>02</strong>
+
+                    <div>
+                        <h3>Previous Failures</h3>
+                        <p>
+                            A major predictive factor in the
+                            trained model.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="shap-insight">
+
+                    <strong>03</strong>
+
+                    <div>
+                        <h3>Study Time</h3>
+                        <p>
+                            Contributes to prediction alongside
+                            other academic and behavioral factors.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             WHAT IF
+        ================================================== -->
+
+        <section id="page-whatif"
+                 class="page-section">
+
+            <div class="page-header">
+
+                <span class="section-label">
+                    ACADEMIC INTERVENTION
+                </span>
+
+                <h1>What-If Simulator</h1>
+
+                <p>
+                    Explore how changes in selected controllable
+                    academic factors can alter the model estimate.
+                </p>
+
+            </div>
+
+
+            <div class="whatif-layout">
+
+                <div class="whatif-form-card">
+
+                    <div class="form-card-title">
+
+                        <div class="large-icon">
+                            ↗
+                        </div>
+
+                        <div>
+                            <h2>Intervention Simulator</h2>
+
+                            <p>
+                                Start with a student's existing profile.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <label>Student ID</label>
+
+                    <input type="text"
+                           id="whatifStudentId"
+                           placeholder="e.g. STU001">
+
+
+                    <label>Study Time</label>
+
+                    <select id="whatifStudy">
+
+                        <option value="">
+                            Keep Current Value
+                        </option>
+
+                        <option value="1">
+                            &lt; 2 hours
+                        </option>
+
+                        <option value="2">
+                            2–5 hours
+                        </option>
+
+                        <option value="3">
+                            5–10 hours
+                        </option>
+
+                        <option value="4">
+                            &gt; 10 hours
+                        </option>
+
+                    </select>
+
+
+                    <label>Previous Failures</label>
+
+                    <select id="whatifFailures">
+
+                        <option value="">
+                            Keep Current Value
+                        </option>
+
+                        <option value="0">
+                            0
+                        </option>
+
+                        <option value="1">
+                            1
+                        </option>
+
+                        <option value="2">
+                            2
+                        </option>
+
+                        <option value="3">
+                            3
+                        </option>
+
+                    </select>
+
+
+                    <label>Absences</label>
+
+                    <input type="number"
+                           id="whatifAbsences"
+                           min="0"
+                           placeholder="Keep current value">
+
+
+                    <button class="primary-button full"
+                            onclick="runWhatIf()">
+
+                        Simulate Intervention
+                        <span>→</span>
+
+                    </button>
+
+                </div>
+
+
+                <div id="whatifResult"
+                     class="whatif-result-card">
+
+                    <div class="result-placeholder">
+
+                        <div class="placeholder-icon">
+                            ↗
+                        </div>
+
+                        <h2>Simulation Ready</h2>
+
+                        <p>
+                            Change one or more factors to compare
+                            the original and simulated predictions.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="important-note">
+
+                <div class="note-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <strong>Important interpretation</strong>
+
+                    <p>
+                        The What-If Simulator demonstrates how the
+                        trained model responds to changed inputs.
+                        It is a predictive simulation, not proof that
+                        changing one factor will directly cause a
+                        particular grade improvement.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+let charts = {};
+
+const initialDashboardData =
+    {{ dashboard_data | tojson }};
+
+
+/* ============================================================
+   PAGE NAVIGATION
+============================================================ */
+
+function showPage(pageName) {
+
+    document.querySelectorAll(".page-section")
+        .forEach(section => {
+            section.classList.remove("active");
+        });
+
+    const selected =
+        document.getElementById(
+            "page-" + pageName
+        );
+
+    if (selected) {
+        selected.classList.add("active");
+    }
+
+
+    document.querySelectorAll(".nav-item")
+        .forEach(item => {
+
+            item.classList.remove("active");
+
+            if (
+                item.dataset.page === pageName
+            ) {
+                item.classList.add("active");
+            }
+
+        });
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+
+    if (pageName === "explain") {
+        loadSHAP();
+    }
+}
+
+
+/* ============================================================
+   CHART DEFAULTS
+============================================================ */
+
+Chart.defaults.font.family =
+    "Inter, Arial, sans-serif";
+
+Chart.defaults.color = "#64748b";
+
+Chart.defaults.borderColor =
+    "rgba(148,163,184,0.18)";
+
+
+/* ============================================================
+   DESTROY CHART
+============================================================ */
+
+function destroyChart(name) {
+
+    if (charts[name]) {
+
+        charts[name].destroy();
+
+        charts[name] = null;
+    }
+}
+
+
+/* ============================================================
+   CREATE CHARTS
+============================================================ */
+
+function updateCharts(data) {
+
+    /* --------------------------------------------------------
+       Grade Distribution — LINE
+    -------------------------------------------------------- */
+
+    destroyChart("grade");
+
+    charts.grade =
+        new Chart(
+            document.getElementById(
+                "gradeChart"
+            ),
+            {
+
+                type: "line",
+
+                data: {
+
+                    labels: data.grade_labels,
+
+                    datasets: [{
+                        label: "Students",
+
+                        data: data.grade_values,
+
+                        borderWidth: 3,
+
+                        tension: 0.35,
+
+                        fill: true,
+
+                        pointRadius: 4,
+
+                        pointHoverRadius: 7,
+
+                        borderColor: "#6366f1",
+
+                        backgroundColor:
+                            "rgba(99,102,241,0.12)",
+
+                        pointBackgroundColor:
+                            "#4f46e5"
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+
+                    scales: {
+
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Final Grade (G3)"
+                            }
+                        },
+
+                        y: {
+                            beginAtZero: true,
+
+                            title: {
+                                display: true,
+                                text: "Number of Students"
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    /* --------------------------------------------------------
+       Performance Category — DOUGHNUT
+    -------------------------------------------------------- */
+
+    destroyChart("category");
+
+    charts.category =
+        new Chart(
+            document.getElementById(
+                "categoryChart"
+            ),
+            {
+
+                type: "doughnut",
+
+                data: {
+
+                    labels: data.category_labels,
+
+                    datasets: [{
+
+                        data: data.category_values,
+
+                        backgroundColor: [
+                            "#ef4444",
+                            "#f97316",
+                            "#f59e0b",
+                            "#14b8a6",
+                            "#6366f1"
+                        ],
+
+                        borderWidth: 0,
+
+                        hoverOffset: 8
+
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    cutout: "68%",
+
+                    plugins: {
+
+                        legend: {
+
+                            position: "bottom",
+
+                            labels: {
+                                usePointStyle: true,
+                                padding: 14
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    /* --------------------------------------------------------
+       Study Time — BAR
+    -------------------------------------------------------- */
+
+    destroyChart("study");
+
+    charts.study =
+        new Chart(
+            document.getElementById(
+                "studyChart"
+            ),
+            {
+
+                type: "bar",
+
+                data: {
+
+                    labels: data.study_labels,
+
+                    datasets: [{
+
+                        label: "Average G3",
+
+                        data: data.study_values,
+
+                        backgroundColor: [
+                            "#8b5cf6",
+                            "#6366f1",
+                            "#14b8a6",
+                            "#0ea5e9"
+                        ],
+
+                        borderRadius: 8,
+
+                        borderSkipped: false
+
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+
+                    scales: {
+
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Weekly Study Time"
+                            }
+                        },
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            max: 20,
+
+                            title: {
+                                display: true,
+                                text: "Average Final Grade"
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    /* --------------------------------------------------------
+       Failures — HORIZONTAL BAR
+    -------------------------------------------------------- */
+
+    destroyChart("failure");
+
+    charts.failure =
+        new Chart(
+            document.getElementById(
+                "failureChart"
+            ),
+            {
+
+                type: "bar",
+
+                data: {
+
+                    labels: data.failure_labels,
+
+                    datasets: [{
+
+                        label: "Average G3",
+
+                        data: data.failure_values,
+
+                        backgroundColor: [
+                            "#14b8a6",
+                            "#f59e0b",
+                            "#f97316",
+                            "#ef4444"
+                        ],
+
+                        borderRadius: 8
+
+                    }]
+
+                },
+
+                options: {
+
+                    indexAxis: "y",
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+
+                    scales: {
+
+                        x: {
+
+                            beginAtZero: true,
+
+                            max: 20,
+
+                            title: {
+                                display: true,
+                                text: "Average Final Grade"
+                            }
+
+                        },
+
+                        y: {
+
+                            title: {
+                                display: true,
+                                text: "Previous Failures"
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    /* --------------------------------------------------------
+       Absence — BAR
+    -------------------------------------------------------- */
+
+    destroyChart("absence");
+
+    charts.absence =
+        new Chart(
+            document.getElementById(
+                "absenceChart"
+            ),
+            {
+
+                type: "bar",
+
+                data: {
+
+                    labels: data.absence_labels,
+
+                    datasets: [{
+
+                        label: "Average G3",
+
+                        data: data.absence_values,
+
+                        backgroundColor: [
+                            "#6366f1",
+                            "#0ea5e9",
+                            "#f59e0b",
+                            "#ef4444"
+                        ],
+
+                        borderRadius: 8
+
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+
+                    scales: {
+
+                        x: {
+
+                            title: {
+                                display: true,
+                                text: "Absence Level"
+                            }
+
+                        },
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            max: 20,
+
+                            title: {
+                                display: true,
+                                text: "Average Final Grade"
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    /* --------------------------------------------------------
+       Gender — DOUGHNUT
+    -------------------------------------------------------- */
+
+    destroyChart("gender");
+
+    charts.gender =
+        new Chart(
+            document.getElementById(
+                "genderChart"
+            ),
+            {
+
+                type: "doughnut",
+
+                data: {
+
+                    labels: data.gender_labels,
+
+                    datasets: [{
+
+                        data: data.gender_values,
+
+                        backgroundColor: [
+                            "#8b5cf6",
+                            "#0ea5e9"
+                        ],
+
+                        borderWidth: 0,
+
+                        hoverOffset: 8
+
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    cutout: "65%",
+
+                    plugins: {
+
+                        legend: {
+
+                            position: "bottom",
+
+                            labels: {
+                                usePointStyle: true,
+                                padding: 18
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    /* --------------------------------------------------------
+       School — BAR
+    -------------------------------------------------------- */
+
+    destroyChart("school");
+
+    charts.school =
+        new Chart(
+            document.getElementById(
+                "schoolChart"
+            ),
+            {
+
+                type: "bar",
+
+                data: {
+
+                    labels: data.school_labels,
+
+                    datasets: [{
+
+                        label: "Average G3",
+
+                        data: data.school_values,
+
+                        backgroundColor: [
+                            "#4f46e5",
+                            "#14b8a6"
+                        ],
+
+                        borderRadius: 10,
+
+                        barThickness: 60
+
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+
+                    scales: {
+
+                        x: {
+
+                            title: {
+                                display: true,
+                                text: "School"
+                            }
+
+                        },
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            max: 20,
+
+                            title: {
+                                display: true,
+                                text: "Average Final Grade"
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+}
+
+
+/* ============================================================
+   KPI UPDATE
+============================================================ */
+
+function updateKPIs(data) {
+
+    document.getElementById(
+        "kpiStudents"
+    ).textContent =
+        data.total_students;
+
+    document.getElementById(
+        "kpiAverage"
+    ).textContent =
+        Number(
+            data.average_grade
+        ).toFixed(2);
+
+    document.getElementById(
+        "kpiHigh"
+    ).textContent =
+        data.high_performers;
+
+    document.getElementById(
+        "kpiRisk"
+    ).textContent =
+        data.at_risk;
+}
+
+
+/* ============================================================
+   APPLY FILTERS
+============================================================ */
+
+async function applyFilters() {
+
+    const school =
+        document.getElementById(
+            "schoolFilter"
+        ).value;
+
+    const gender =
+        document.getElementById(
+            "genderFilter"
+        ).value;
+
+    const study =
+        document.getElementById(
+            "studyFilter"
+        ).value;
+
+    const performance =
+        document.getElementById(
+            "performanceFilter"
+        ).value;
+
+
+    const params =
+        new URLSearchParams({
+
+            school: school,
+
+            gender: gender,
+
+            studytime: study,
+
+            performance: performance
+
+        });
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/dashboard?" +
+                params.toString()
+            );
+
+        const data =
+            await response.json();
+
+
+        updateKPIs(data);
+
+        updateCharts(data);
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Dashboard error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   RESET FILTERS
+============================================================ */
+
+function resetFilters() {
+
+    document.getElementById(
+        "schoolFilter"
+    ).value = "All";
+
+    document.getElementById(
+        "genderFilter"
+    ).value = "All";
+
+    document.getElementById(
+        "studyFilter"
+    ).value = "All";
+
+    document.getElementById(
+        "performanceFilter"
+    ).value = "All";
+
+
+    applyFilters();
+
+}
+
+
+/* ============================================================
+   STUDENT SEARCH
+============================================================ */
+
+async function searchStudent() {
+
+    const id =
+        document.getElementById(
+            "studentSearch"
+        ).value.trim();
+
+    const message =
+        document.getElementById(
+            "studentMessage"
+        );
+
+    if (!id) {
+
+        message.textContent =
+            "Please enter a Student ID.";
+
+        message.className =
+            "message error";
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/student/" +
+                encodeURIComponent(id)
+            );
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            message.textContent =
+                data.message ||
+                "Student not found.";
+
+            message.className =
+                "message error";
+
+            return;
+        }
+
+
+        message.textContent =
+            "Student found successfully.";
+
+        message.className =
+            "message success";
+
+
+        displayStudent(data);
+
+    }
+
+    catch (error) {
+
+        message.textContent =
+            "Unable to connect to the server.";
+
+        message.className =
+            "message error";
+
+    }
+
+}
+
+
+/* ============================================================
+   DISPLAY STUDENT
+============================================================ */
+
+function displayStudent(data) {
+
+    document.getElementById(
+        "studentResult"
+    ).classList.remove("hidden");
+
+
+    document.getElementById(
+        "studentName"
+    ).textContent =
+        data.student_id;
+
+
+    document.getElementById(
+        "studentMeta"
+    ).textContent =
+        `${data.school} School • ${data.sex}`;
+
+
+    document.getElementById(
+        "studentAge"
+    ).textContent =
+        data.age;
+
+
+    document.getElementById(
+        "studentSchool"
+    ).textContent =
+        data.school;
+
+
+    document.getElementById(
+        "studentStudy"
+    ).textContent =
+        data.studytime_label;
+
+
+    document.getElementById(
+        "studentFailures"
+    ).textContent =
+        data.failures;
+
+
+    document.getElementById(
+        "studentAbsences"
+    ).textContent =
+        data.absences;
+
+
+    document.getElementById(
+        "studentActual"
+    ).textContent =
+        data.actual_grade.toFixed(2);
+
+
+    document.getElementById(
+        "studentPrediction"
+    ).textContent =
+        data.predicted_grade.toFixed(2);
+
+
+    document.getElementById(
+        "studentTrack"
+    ).style.width =
+        `${(data.predicted_grade / 20) * 100}%`;
+
+
+    const pill =
+        document.getElementById(
+            "studentCategory"
+        );
+
+    pill.textContent =
+        data.performance;
+
+    pill.className =
+        "performance-pill " +
+        getCategoryClass(
+            data.performance
+        );
+
+}
+
+
+/* ============================================================
+   CATEGORY CLASS
+============================================================ */
+
+function getCategoryClass(category) {
+
+    if (category === "High Risk")
+        return "risk";
+
+    if (category === "Moderate Risk")
+        return "moderate";
+
+    if (category === "Good")
+        return "good";
+
+    if (category === "Excellent")
+        return "excellent";
+
+    return "average";
+}
+
+
+/* ============================================================
+   PREDICTION
+============================================================ */
+
+async function runPrediction() {
+
+    const id =
+        document.getElementById(
+            "predictStudentId"
+        ).value.trim();
+
+    const result =
+        document.getElementById(
+            "predictionResult"
+        );
+
+
+    if (!id) {
+
+        result.innerHTML = `
+            <div class="result-error">
+                Please enter a Student ID.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    result.innerHTML = `
+        <div class="result-loading">
+            <div class="spinner"></div>
+            Generating prediction...
+        </div>
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/predict",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        student_id: id
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            result.innerHTML = `
+                <div class="result-error">
+                    ${data.message}
+                </div>
+            `;
+
+            return;
+        }
+
+
+        result.innerHTML = `
+
+            <div class="prediction-result">
+
+                <span class="result-label">
+                    PREDICTED FINAL GRADE
+                </span>
+
+                <div class="big-grade">
+
+                    ${data.predicted_grade.toFixed(2)}
+
+                    <small>/ 20</small>
+
+                </div>
+
+
+                <div class="result-pill ${getCategoryClass(data.performance)}">
+
+                    ${data.performance}
+
+                </div>
+
+
+                <div class="prediction-meter">
+
+                    <div
+                        style="width:${(data.predicted_grade / 20) * 100}%">
+                    </div>
+
+                </div>
+
+
+                <div class="result-details">
+
+                    <div>
+                        <span>Student</span>
+                        <strong>${data.student_id}</strong>
+                    </div>
+
+                    <div>
+                        <span>Actual G3</span>
+                        <strong>${data.actual_grade.toFixed(2)}</strong>
+                    </div>
+
+                    <div>
+                        <span>Model</span>
+                        <strong>Random Forest</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="accuracy-note">
+
+                    <strong>Model Performance</strong>
+
+                    <p>
+                        R² = ${data.r2.toFixed(2)}
+                        &nbsp; • &nbsp;
+                        MAE = ±${data.mae.toFixed(2)}
+                        &nbsp; • &nbsp;
+                        RMSE = ${data.rmse.toFixed(2)}
+                    </p>
+
+                    <small>
+                        The prediction is an estimate and may
+                        differ from the student's actual outcome.
+                    </small>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+    catch (error) {
+
+        result.innerHTML = `
+            <div class="result-error">
+                Unable to connect to the prediction service.
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* ============================================================
+   SHAP
+============================================================ */
+
+async function loadSHAP() {
+
+    const container =
+        document.getElementById(
+            "shapContainer"
+        );
+
+
+    if (
+        container.dataset.loaded === "true"
+    ) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/shap"
+            );
+
+        const data =
+            await response.json();
+
+
+        if (
+            data.success &&
+            data.image
+        ) {
+
+            container.innerHTML = `
+
+                <img
+                    src="${data.image}"
+                    alt="SHAP Feature Importance"
+                    class="shap-image">
+
+            `;
+
+            container.dataset.loaded =
+                "true";
+
+        }
+
+        else {
+
+            container.innerHTML = `
+                <div class="shap-loading">
+                    SHAP analysis image is not available.
+                </div>
+            `;
+
+        }
+
+    }
+
+    catch (error) {
+
+        container.innerHTML = `
+            <div class="shap-loading">
+                Unable to load SHAP analysis.
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* ============================================================
+   WHAT IF
+============================================================ */
+
+async function runWhatIf() {
+
+    const id =
+        document.getElementById(
+            "whatifStudentId"
+        ).value.trim();
+
+    const study =
+        document.getElementById(
+            "whatifStudy"
+        ).value;
+
+    const failures =
+        document.getElementById(
+            "whatifFailures"
+        ).value;
+
+    const absences =
+        document.getElementById(
+            "whatifAbsences"
+        ).value;
+
+
+    const result =
+        document.getElementById(
+            "whatifResult"
+        );
+
+
+    if (!id) {
+
+        result.innerHTML = `
+            <div class="result-error">
+                Please enter a Student ID.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    result.innerHTML = `
+        <div class="result-loading">
+            <div class="spinner"></div>
+            Running intervention simulation...
+        </div>
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/whatif",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        student_id: id,
+
+                        studytime:
+                            study || null,
+
+                        failures:
+                            failures || null,
+
+                        absences:
+                            absences || null
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            result.innerHTML = `
+                <div class="result-error">
+                    ${data.message}
+                </div>
+            `;
+
+            return;
+        }
+
+
+        const difference =
+            data.difference;
+
+
+        const direction =
+            difference > 0
+                ? "improvement"
+                : difference < 0
+                    ? "decrease"
+                    : "no change";
+
+
+        result.innerHTML = `
+
+            <div class="whatif-result">
+
+                <span class="result-label">
+                    SIMULATION RESULT
+                </span>
+
+                <h2>
+                    ${data.student_id}
+                </h2>
+
+
+                <div class="whatif-comparison">
+
+                    <div class="whatif-score">
+
+                        <span>Original</span>
+
+                        <strong>
+                            ${data.original_prediction.toFixed(2)}
+                        </strong>
+
+                        <small>/ 20</small>
+
+                    </div>
+
+
+                    <div class="arrow">
+                        →
+                    </div>
+
+
+                    <div class="whatif-score new">
+
+                        <span>Simulated</span>
+
+                        <strong>
+                            ${data.new_prediction.toFixed(2)}
+                        </strong>
+
+                        <small>/ 20</small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="difference ${difference >= 0 ? "positive" : "negative"}">
+
+                    ${difference >= 0 ? "+" : ""}
+                    ${difference.toFixed(2)}
+
+                    <span>
+                        grade points (${direction})
+                    </span>
+
+                </div>
+
+
+                <div class="simulation-details">
+
+                    <div>
+                        <span>Study Time</span>
+                        <strong>
+                            ${data.studytime}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Failures</span>
+                        <strong>
+                            ${data.failures}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Absences</span>
+                        <strong>
+                            ${data.absences}
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="simulation-category">
+
+                    <span>
+                        New performance level
+                    </span>
+
+                    <strong>
+                        ${data.new_category}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+    catch (error) {
+
+        result.innerHTML = `
+            <div class="result-error">
+                Unable to run the simulation.
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* ============================================================
+   INITIALIZE
+============================================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        updateKPIs(
+            initialDashboardData
+        );
+
+        updateCharts(
+            initialDashboardData
+        );
+
+    }
+);
+
+</script>
+
+</body>
+</html>
+```
